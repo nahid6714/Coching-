@@ -40,7 +40,6 @@ import {
   Calendar,
   Send,
   Loader2,
-  LayoutGrid,
 } from 'lucide-react';
 
 export function StatusBadge({status}: {status: BatchStatus}) {
@@ -175,35 +174,6 @@ export default function InfinityAcademyClient() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#F8F9FC] text-[#141A38] selection:bg-[#F5A623] selection:text-[#141A38]">
-      {/* =====================================================================
-          0. ALL 18 PAGES QUICK SWITCHER BAR (For instant preview of all 18 pages)
-      ===================================================================== */}
-      <div className="bg-[#0E1329] text-white px-3 sm:px-6 py-2 border-b border-white/10">
-        <div className="max-w-6xl mx-auto flex items-center gap-2 overflow-x-auto no-scrollbar">
-          <span className="flex items-center gap-1 text-[11px] font-bold text-[#F5A623] shrink-0 pr-2 border-r border-white/15">
-            <LayoutGrid className="w-3.5 h-3.5" />
-            <span>১৮টি পেজ নেভিগেটর:</span>
-          </span>
-          {ALL_PAGES.map((p) => {
-            const isActive = activePage === p.id;
-            return (
-              <button
-                key={p.id}
-                type="button"
-                onClick={() => navigateTo(p.id)}
-                className={`text-[11px] px-2.5 py-1 rounded-md font-semibold whitespace-nowrap shrink-0 transition-colors cursor-pointer ${
-                  isActive
-                    ? 'bg-[#F5A623] text-[#141A38]'
-                    : 'bg-white/5 text-slate-300 hover:bg-white/15 hover:text-white'
-                }`}
-              >
-                {p.num}. {p.label}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
       {/* =====================================================================
           1. TOP UTILITY BAR
       ===================================================================== */}
@@ -360,9 +330,7 @@ export default function InfinityAcademyClient() {
                     : 'text-slate-700 hover:bg-slate-50'
                 }`}
               >
-                <span>
-                  {p.num}. {p.label}
-                </span>
+                <span>{p.label}</span>
                 <span className="text-[10px] text-slate-400">{p.group}</span>
               </button>
             ))}
@@ -2198,9 +2166,8 @@ export default function InfinityAcademyClient() {
             </div>
           </div>
 
-          <div className="pt-6 text-[11px] text-slate-500 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-            <span>© ২০২৬ INFINITY ACADEMY. সর্বস্বত্ব সংরক্ষিত।</span>
-            <span>মোট ১৮টি পেজ সক্রিয় রয়েছে</span>
+          <div className="pt-6 text-[11px] text-slate-500">
+            © ২০২৬ INFINITY ACADEMY. সর্বস্বত্ব সংরক্ষিত।
           </div>
         </div>
       </footer>
