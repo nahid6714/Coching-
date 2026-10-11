@@ -14,7 +14,27 @@ export default function Navbar() {
   const [activeMobileSubmenu, setActiveMobileSubmenu] = useState<string | null>(
     null
   );
+  const [loggedInName, setLoggedInName] = useState<string | null>(null);
   const navRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const syncAuth = () => {
+      try {
+        const raw = localStorage.getItem('infinity_current_user');
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          setLoggedInName(parsed?.name || null);
+        } else {
+          setLoggedInName(null);
+        }
+      } catch {
+        setLoggedInName(null);
+      }
+    };
+    syncAuth();
+    window.addEventListener('auth-change', syncAuth);
+    return () => window.removeEventListener('auth-change', syncAuth);
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -72,6 +92,7 @@ export default function Navbar() {
         {href: '/teachers', label: 'শিক্ষক পরিচিতি'},
         {href: '/about', label: 'আমাদের সম্পর্কে ও যোগাযোগ'},
         {href: '/enroll', label: 'ভর্তি আবেদন ফরম'},
+        {href: '/register', label: 'নতুন শিক্ষার্থী রেজিস্ট্রেশন'},
       ],
     },
   ];
@@ -227,7 +248,7 @@ export default function Navbar() {
               onClick={closeAll}
               className="bg-[#1F2A7C] hover:bg-[#151d57] text-white text-sm sm:text-base font-bold px-4 sm:px-5 py-2.5 rounded-lg transition-colors whitespace-nowrap"
             >
-              লগইন
+              {loggedInName ? loggedInName.split(' ')[0] : 'লগইন'}
             </Link>
             <button
               type="button"
