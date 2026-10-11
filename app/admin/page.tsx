@@ -442,10 +442,12 @@ export default function AdminPage() {
                               {app.guardianPhone}
                             </p>
                           )}
-                          <p>
-                            <span className="font-bold">প্রতিষ্ঠান:</span>{' '}
-                            {app.institution}
-                          </p>
+                          {app.institution && (
+                            <p>
+                              <span className="font-bold">প্রতিষ্ঠান:</span>{' '}
+                              {app.institution}
+                            </p>
+                          )}
                           {app.address && (
                             <p>
                               <span className="font-bold">ঠিকানা/মন্তব্য:</span>{' '}

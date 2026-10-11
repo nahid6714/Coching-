@@ -157,13 +157,13 @@ export default async function CourseDetailsPage({
 
             <Link
               href={`/enroll?course=${encodeURIComponent(course.title)}`}
-              className="block w-full text-center bg-[#F5A623] hover:bg-[#e09416] text-[#141A38] font-bold text-base py-3.5 rounded-lg transition-colors"
+              className="block w-full text-center bg-[#F5A623] hover:bg-[#e09416] text-[#141A38] font-bold text-lg py-3.5 rounded-lg transition-colors"
             >
-              ভর্তির জন্য আবেদন করুন (Apply)
+              ভর্তি হও →
             </Link>
 
             <p className="text-sm text-slate-500 text-center leading-relaxed">
-              আবেদন ফরম পূরণ করার পর আমাদের প্রতিনিধি আপনাকে ফোন করে ভর্তি কনফার্ম করবেন।
+              শুধু নাম ও মোবাইল নম্বর দিন — আমাদের প্রতিনিধি ফোন করে ভর্তি কনফার্ম করবেন।
             </p>
           </aside>
         </div>

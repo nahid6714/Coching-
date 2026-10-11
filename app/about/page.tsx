@@ -12,13 +12,13 @@ export default function AboutPage() {
       <section className="bg-[#1F2A7C] text-white py-10 px-4 sm:px-8">
         <div className="max-w-6xl mx-auto">
           <p className="text-sm text-[#F5A623] font-bold mb-1">
-            হোম / আমাদের সম্পর্কে ও যোগাযোগ
+            হোম / যোগাযোগ
           </p>
           <h1 className="text-3xl sm:text-4xl font-bold">
-            INFINITY ACADEMY সম্পর্কে ও যোগাযোগের ঠিকানা
+            যোগাযোগ ও আমাদের সম্পর্কে
           </h1>
           <p className="text-base text-slate-200 mt-2">
-            অনলাইন ও অফলাইনে মানসম্মত শিক্ষার নির্ভরযোগ্য প্ল্যাটফর্ম।
+            যেকোনো তথ্যের জন্য আমাদের হেল্পলাইনে কল করুন অথবা অফলাইন সেন্টারে চলে আসুন।
           </p>
         </div>
       </section>

@@ -14,20 +14,20 @@ export default function Footer() {
   const footerGroups = [
     {
       key: 'company',
-      title: 'কোম্পানি',
+      title: 'একাডেমি',
       links: [
-        {href: '/about', label: 'আমাদের সম্পর্কে'},
+        {href: '/about', label: 'যোগাযোগ ও ঠিকানা'},
         {href: '/teachers', label: 'শিক্ষক পরিচিতি'},
-        {href: '/about', label: 'গোপনীয়তা নীতি'},
+        {href: '/about', label: 'আমাদের সম্পর্কে'},
       ],
     },
     {
       key: 'resources',
-      title: 'কোর্স ও রিসোর্স',
+      title: 'কোর্স ও ভর্তি',
       links: [
-        {href: '/courses', label: 'সব কোর্সসমূহ'},
-        {href: '/free-classes', label: 'ফ্রি ক্লাস দেখুন'},
-        {href: '/enroll', label: 'ভর্তি আবেদন ফরম'},
+        {href: '/courses', label: 'কোর্সসমূহ'},
+        {href: '/free-classes', label: 'ফ্রি ক্লাস'},
+        {href: '/enroll', label: 'ভর্তি হও'},
       ],
     },
     {

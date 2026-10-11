@@ -104,9 +104,9 @@ export default function FreeClassesPage() {
                 </span>
                 <Link
                   href={`/enroll?course=${encodeURIComponent(fc.courseTitle)}`}
-                  className="bg-[#1F2A7C] hover:bg-[#151d57] text-white text-sm font-bold px-5 py-2.5 rounded-lg transition-colors"
+                  className="bg-[#F5A623] hover:bg-[#e09416] text-[#141A38] text-sm font-bold px-5 py-2.5 rounded-lg transition-colors"
                 >
-                  মূল কোর্সে ভর্তি আবেদন
+                  ভর্তি হও
                 </Link>
               </div>
             </div>
@@ -127,7 +127,7 @@ export default function FreeClassesPage() {
             href="/enroll"
             className="bg-[#F5A623] hover:bg-[#e09416] text-[#141A38] font-bold text-base px-6 py-3.5 rounded-lg shrink-0 transition-colors"
           >
-            ভর্তি আবেদন করুন →
+            ভর্তি হও →
           </Link>
         </div>
       </main>

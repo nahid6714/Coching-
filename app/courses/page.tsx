@@ -127,7 +127,7 @@ function CoursesContent() {
                   href={`/enroll?course=${encodeURIComponent(course.title)}`}
                   className="bg-[#F5A623] hover:bg-[#e09416] text-[#141A38] text-sm font-bold px-4 py-2.5 rounded-lg transition-colors"
                 >
-                  ভর্তি আবেদন
+                  ভর্তি হও
                 </Link>
               </div>
             </div>

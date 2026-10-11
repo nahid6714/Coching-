@@ -3,113 +3,59 @@
 import React, {useState, useEffect, useRef} from 'react';
 import Link from 'next/link';
 import {usePathname} from 'next/navigation';
-import {Menu, X, ChevronDown} from 'lucide-react';
+import {Menu, X, Phone} from 'lucide-react';
 
 export default function Navbar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [activeDesktopDropdown, setActiveDesktopDropdown] = useState<
-    string | null
-  >(null);
-  const [activeMobileSubmenu, setActiveMobileSubmenu] = useState<string | null>(
-    null
-  );
-  const [loggedInName, setLoggedInName] = useState<string | null>(null);
   const navRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const syncAuth = () => {
-      try {
-        const raw = localStorage.getItem('infinity_current_user');
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          setLoggedInName(parsed?.name || null);
-        } else {
-          setLoggedInName(null);
-        }
-      } catch {
-        setLoggedInName(null);
-      }
-    };
-    syncAuth();
-    window.addEventListener('auth-change', syncAuth);
-    return () => window.removeEventListener('auth-change', syncAuth);
-  }, []);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (navRef.current && !navRef.current.contains(e.target as Node)) {
-        setActiveDesktopDropdown(null);
+        setMobileOpen(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const toggleDesktopDropdown = (key: string) => {
-    setActiveDesktopDropdown((prev) => (prev === key ? null : key));
-  };
-
-  const toggleMobileSubmenu = (key: string) => {
-    setActiveMobileSubmenu((prev) => (prev === key ? null : key));
-  };
-
   const closeAll = () => {
     setMobileOpen(false);
-    setActiveDesktopDropdown(null);
-    setActiveMobileSubmenu(null);
   };
 
-  const dropdownMenus = [
-    {
-      key: 'academic',
-      label: 'ক্লাস ৬–১২',
-      items: [
-        {href: '/courses/hsc-science', label: 'এইচএসসি ২০২৬ পূর্ণাঙ্গ ব্যাচ'},
-        {href: '/courses/ssc-class10', label: 'এসএসসি (দশম শ্রেণি) ব্যাচ'},
-        {href: '/courses/class-9', label: 'নবম শ্রেণি ফাউন্ডেশন ব্যাচ'},
-        {href: '/courses/class-6-8', label: 'ষষ্ঠ–অষ্টম শ্রেণি ব্যাচ'},
-        {href: '/courses?category=ক্লাস ৬–১২', label: 'সব একাডেমিক কোর্স দেখুন →'},
-      ],
-    },
-    {
-      key: 'skills',
-      label: 'ইংরেজি ও স্কিল',
-      items: [
-        {href: '/courses/spoken-english', label: 'স্পোকেন ইংলিশ কোর্স'},
-        {href: '/courses/ielts-prep', label: 'আইইএলটিএস (IELTS) প্রস্তুতি'},
-        {href: '/courses/kids-english', label: 'কিডস ইংলিশ কোর্স'},
-        {href: '/courses/mock-test', label: 'অনলাইন মক টেস্ট সিরিজ'},
-        {href: '/courses?category=ইংরেজি ও স্কিল', label: 'সব স্কিল কোর্স দেখুন →'},
-      ],
-    },
-    {
-      key: 'more',
-      label: 'আরও',
-      items: [
-        {href: '/courses/admission-prep', label: 'ভর্তি প্রস্তুতি (মেডিকেল ও বুয়েট)'},
-        {href: '/free-classes', label: 'ফ্রি ডেমো ক্লাস'},
-        {href: '/teachers', label: 'শিক্ষক পরিচিতি'},
-        {href: '/about', label: 'আমাদের সম্পর্কে ও যোগাযোগ'},
-        {href: '/enroll', label: 'ভর্তি আবেদন ফরম'},
-        {href: '/register', label: 'নতুন শিক্ষার্থী রেজিস্ট্রেশন'},
-      ],
-    },
+  const navItems = [
+    {href: '/', label: 'হোম'},
+    {href: '/courses', label: 'কোর্সসমূহ'},
+    {href: '/free-classes', label: 'ফ্রি ক্লাস'},
+    {href: '/teachers', label: 'শিক্ষক'},
+    {href: '/about', label: 'যোগাযোগ'},
   ];
+
+  const isActive = (href: string) => {
+    if (href === '/') return pathname === '/';
+    return pathname === href || pathname.startsWith(`${href}/`);
+  };
 
   return (
     <div ref={navRef} className="sticky top-0 z-40">
       {/* Top Dark Utility Bar */}
       <div className="bg-[#141A38] text-slate-200 text-sm py-2 px-4 sm:px-8 border-b border-white/10">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <span>হেল্পলাইন: ০৯৬১০-০০১১২২</span>
-          <div className="flex items-center gap-6">
+          <a
+            href="tel:09610001122"
+            className="flex items-center gap-1.5 hover:text-[#F5A623] transition-colors font-medium"
+          >
+            <Phone className="w-3.5 h-3.5 text-[#F5A623]" />
+            <span>হেল্পলাইন: ০৯৬১০-০০১১২২</span>
+          </a>
+          <div className="flex items-center gap-5">
             <Link
               href="/free-classes"
               onClick={closeAll}
               className="hover:text-[#F5A623] transition-colors"
             >
-              ফ্রি রিসোর্স
+              ফ্রি ক্লাস
             </Link>
             <Link
               href="/about"
@@ -125,7 +71,7 @@ export default function Navbar() {
       {/* Main Sticky Header */}
       <header className="bg-white border-b border-slate-200 shadow-xs px-4 sm:px-8 py-4">
         <div className="max-w-6xl mx-auto flex items-center justify-between gap-4">
-          {/* Logo */}
+          {/* Brand Logo */}
           <Link
             href="/"
             onClick={closeAll}
@@ -157,105 +103,40 @@ export default function Navbar() {
             </div>
           </Link>
 
-          {/* Desktop Navigation with Smooth Exclusive Dropdowns */}
-          <nav className="hidden lg:flex items-center gap-6 text-base font-semibold text-slate-700">
-            <Link
-              href="/"
-              onClick={closeAll}
-              className={`hover:text-[#1F2A7C] transition-colors ${
-                pathname === '/' ? 'text-[#1F2A7C] font-bold' : ''
-              }`}
-            >
-              হোম
-            </Link>
-
-            {dropdownMenus.map((menu) => {
-              const isOpen = activeDesktopDropdown === menu.key;
+          {/* Clean 5-Item Desktop Navigation */}
+          <nav className="hidden lg:flex items-center gap-8 text-base sm:text-lg font-semibold text-slate-700">
+            {navItems.map((item) => {
+              const active = isActive(item.href);
               return (
-                <div key={menu.key} className="relative">
-                  <button
-                    type="button"
-                    onClick={() => toggleDesktopDropdown(menu.key)}
-                    className={`flex items-center gap-1.5 py-1 hover:text-[#1F2A7C] transition-colors cursor-pointer ${
-                      isOpen ? 'text-[#1F2A7C] font-bold' : ''
-                    }`}
-                  >
-                    <span>{menu.label}</span>
-                    <ChevronDown
-                      className={`w-4 h-4 transition-transform duration-300 ease-in-out ${
-                        isOpen ? 'rotate-180 text-[#F5A623]' : ''
-                      }`}
-                    />
-                  </button>
-
-                  {/* Smooth Desktop Dropdown Panel */}
-                  <div
-                    className={`absolute left-0 top-full pt-3 w-64 transition-all duration-300 ease-in-out origin-top ${
-                      isOpen
-                        ? 'opacity-100 translate-y-0 scale-100 pointer-events-auto'
-                        : 'opacity-0 -translate-y-2 scale-95 pointer-events-none'
-                    }`}
-                  >
-                    <div className="bg-white rounded-xl border border-slate-200 border-t-4 border-t-[#F5A623] shadow-lg py-2 overflow-hidden">
-                      {menu.items.map((sub) => (
-                        <Link
-                          key={sub.href}
-                          href={sub.href}
-                          onClick={closeAll}
-                          className="block px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-[#EEF1FA] hover:text-[#1F2A7C] transition-colors"
-                        >
-                          {sub.label}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={closeAll}
+                  className={`py-1 transition-colors relative ${
+                    active
+                      ? 'text-[#1F2A7C] font-bold after:content-[""] after:absolute after:left-0 after:right-0 after:-bottom-1 after:h-0.5 after:bg-[#F5A623] after:rounded-full'
+                      : 'hover:text-[#1F2A7C]'
+                  }`}
+                >
+                  {item.label}
+                </Link>
               );
             })}
-
-            <Link
-              href="/free-classes"
-              onClick={closeAll}
-              className={`hover:text-[#1F2A7C] transition-colors ${
-                pathname === '/free-classes' ? 'text-[#1F2A7C] font-bold' : ''
-              }`}
-            >
-              ফ্রি ক্লাস
-            </Link>
-
-            <Link
-              href="/teachers"
-              onClick={closeAll}
-              className={`hover:text-[#1F2A7C] transition-colors ${
-                pathname === '/teachers' ? 'text-[#1F2A7C] font-bold' : ''
-              }`}
-            >
-              শিক্ষকবৃন্দ
-            </Link>
           </nav>
 
-          {/* Right Action Buttons: "কোর্সসমূহ" + "লগইন" + Mobile Hamburger */}
-          <div className="flex items-center gap-2.5 sm:gap-3 shrink-0">
+          {/* Single Prominent CTA Button: "ভর্তি হও" + Mobile Menu Toggle */}
+          <div className="flex items-center gap-3 shrink-0">
             <Link
-              href="/courses"
+              href="/enroll"
               onClick={closeAll}
-              className="bg-[#F5A623] hover:bg-[#e09416] text-[#141A38] text-sm sm:text-base font-bold px-4 sm:px-5 py-2.5 rounded-lg transition-colors whitespace-nowrap"
+              className="bg-[#F5A623] hover:bg-[#e09416] text-[#141A38] text-base sm:text-lg font-bold px-5 sm:px-7 py-2.5 rounded-lg shadow-xs transition-colors whitespace-nowrap"
             >
-              কোর্সসমূহ
+              ভর্তি হও
             </Link>
-            <Link
-              href="/login"
-              onClick={closeAll}
-              className="bg-[#1F2A7C] hover:bg-[#151d57] text-white text-sm sm:text-base font-bold px-4 sm:px-5 py-2.5 rounded-lg transition-colors whitespace-nowrap"
-            >
-              {loggedInName ? loggedInName.split(' ')[0] : 'লগইন'}
-            </Link>
+
             <button
               type="button"
-              onClick={() => {
-                setMobileOpen((prev) => !prev);
-                setActiveMobileSubmenu(null);
-              }}
+              onClick={() => setMobileOpen((prev) => !prev)}
               aria-label="মেনু"
               className="lg:hidden p-2 rounded-lg border border-slate-200 text-[#141A38] hover:bg-slate-100 cursor-pointer transition-colors"
             >
@@ -268,7 +149,7 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Mobile Menu with Smooth Accordion Dropdowns (One open at a time) */}
+        {/* Smooth Mobile Drawer */}
         <div
           className={`lg:hidden grid transition-all duration-300 ease-in-out ${
             mobileOpen
@@ -277,71 +158,31 @@ export default function Navbar() {
           }`}
         >
           <div className="overflow-hidden">
-            <div className="flex flex-col gap-1 pb-2">
-              <Link
-                href="/"
-                onClick={closeAll}
-                className="px-3 py-2.5 rounded-lg text-base font-bold text-[#141A38] hover:bg-slate-100 transition-colors"
-              >
-                হোম
-              </Link>
-
-              {dropdownMenus.map((menu) => {
-                const isSubOpen = activeMobileSubmenu === menu.key;
+            <div className="flex flex-col gap-1.5 pb-2">
+              {navItems.map((item) => {
+                const active = isActive(item.href);
                 return (
-                  <div
-                    key={menu.key}
-                    className="rounded-lg border border-slate-100 overflow-hidden"
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={closeAll}
+                    className={`px-3.5 py-2.5 rounded-lg text-base font-bold transition-colors ${
+                      active
+                        ? 'bg-[#EEF1FA] text-[#1F2A7C]'
+                        : 'text-[#141A38] hover:bg-slate-100'
+                    }`}
                   >
-                    <button
-                      type="button"
-                      onClick={() => toggleMobileSubmenu(menu.key)}
-                      className={`w-full px-3 py-2.5 flex items-center justify-between text-left text-base font-bold transition-colors cursor-pointer ${
-                        isSubOpen
-                          ? 'bg-[#EEF1FA] text-[#1F2A7C]'
-                          : 'text-[#141A38] hover:bg-slate-50'
-                      }`}
-                    >
-                      <span>{menu.label}</span>
-                      <ChevronDown
-                        className={`w-4 h-4 transition-transform duration-300 ease-in-out ${
-                          isSubOpen ? 'rotate-180 text-[#1F2A7C]' : 'text-slate-400'
-                        }`}
-                      />
-                    </button>
-
-                    <div
-                      className={`grid transition-all duration-300 ease-in-out ${
-                        isSubOpen
-                          ? 'grid-rows-[1fr] opacity-100'
-                          : 'grid-rows-[0fr] opacity-0'
-                      }`}
-                    >
-                      <div className="overflow-hidden bg-[#F8F9FC]">
-                        <div className="py-1.5 px-3 flex flex-col gap-1 border-t border-slate-100">
-                          {menu.items.map((sub) => (
-                            <Link
-                              key={sub.href}
-                              href={sub.href}
-                              onClick={closeAll}
-                              className="py-2 px-2 rounded-md text-sm font-semibold text-slate-700 hover:text-[#1F2A7C] hover:bg-white transition-colors"
-                            >
-                              {sub.label}
-                            </Link>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                    {item.label}
+                  </Link>
                 );
               })}
 
               <Link
                 href="/enroll"
                 onClick={closeAll}
-                className="mt-2 px-3 py-2.5 rounded-lg text-base font-bold bg-[#1F2A7C] text-white text-center transition-colors"
+                className="mt-2 px-4 py-3 rounded-lg text-base font-bold bg-[#1F2A7C] text-white text-center transition-colors"
               >
-                ভর্তি আবেদন ফরম
+                ভর্তি হও →
               </Link>
             </div>
           </div>
