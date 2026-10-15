@@ -23,6 +23,9 @@ import {
   X,
   GraduationCap,
   Save,
+  Menu,
+  ChevronRight,
+  ExternalLink,
 } from 'lucide-react';
 
 const ADMIN_ID = '01931866636';
@@ -63,6 +66,7 @@ export default function AdminPage() {
   const [activeTab, setActiveTab] = useState<
     'applications' | 'students' | 'courses' | 'teachers'
   >('applications');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const [applications, setApplications] = useState<ExtendedApplication[]>([]);
   const [registeredUsers, setRegisteredUsers] = useState<RegisteredUser[]>([]);
@@ -286,126 +290,92 @@ export default function AdminPage() {
   ).length;
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F8F9FC] text-[#141A38]">
-      {/* Admin Top Header */}
-      <header className="bg-[#141A38] text-white px-4 sm:px-8 py-4 sticky top-0 z-40 shadow-sm">
-        <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#F5A623] text-[#141A38] flex items-center justify-center font-bold">
-              <ShieldCheck className="w-6 h-6" />
-            </div>
-            <div>
-              <h1 className="font-bold text-lg sm:text-xl leading-none">
-                INFINITY ACADEMY — অ্যাডমিন প্যানেল
-              </h1>
-              <p className="text-xs sm:text-sm text-slate-300 mt-1">
-                লগইনকৃত অ্যাডমিন: {ADMIN_ID}
-              </p>
-            </div>
+    <div className="min-h-screen bg-[#F5F7FB] text-slate-800 lg:flex">
+      {/* Professional LakeBazar-inspired admin shell */}
+        {sidebarOpen && <button aria-label="মেনু বন্ধ করুন" onClick={() => setSidebarOpen(false)} className="fixed inset-0 z-40 bg-slate-950/50 lg:hidden" />}
+        <aside className={`fixed inset-y-0 left-0 z-50 flex w-[270px] flex-col bg-[#111827] text-white shadow-2xl transition-transform duration-300 lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+          <div className="flex h-[82px] items-center gap-3 border-b border-white/10 px-5">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#F5A623] text-[#111827] shadow-lg"><GraduationCap className="h-6 w-6"/></div>
+            <div className="min-w-0"><p className="truncate text-base font-extrabold tracking-wide">INFINITY ACADEMY</p><p className="mt-0.5 text-xs text-slate-400">Learning Management</p></div>
+            <button type="button" onClick={() => setSidebarOpen(false)} className="ml-auto rounded-lg p-2 text-slate-400 hover:bg-white/10 lg:hidden" aria-label="মেনু বন্ধ"><X className="h-5 w-5"/></button>
           </div>
-
-          <div className="flex items-center gap-3">
-            <Link
-              href="/"
-              className="bg-white/10 hover:bg-white/20 text-white text-sm sm:text-base font-semibold px-4 py-2 rounded-lg transition-colors"
-            >
-              ওয়েবসাইট দেখুন
-            </Link>
-            <button
-              type="button"
-              onClick={handleAdminLogout}
-              className="bg-rose-600 hover:bg-rose-700 text-white text-sm sm:text-base font-bold px-4 py-2 rounded-lg flex items-center gap-2 transition-colors cursor-pointer"
-            >
-              <LogOut className="w-4 h-4" />
-              <span>লগআউট</span>
-            </button>
+          <div className="px-5 pb-3 pt-5"><p className="text-[10px] font-bold uppercase tracking-[.2em] text-slate-500">Workspace</p><p className="mt-1 text-sm font-semibold text-slate-200">Academy Management</p></div>
+          <nav className="flex-1 space-y-1 overflow-y-auto px-3 pb-4">
+            <p className="px-3 pb-2 pt-3 text-[10px] font-bold uppercase tracking-[.18em] text-slate-500">Main Menu</p>
+            {([
+              ['applications','ভর্তি আবেদন','FileText',applications.length],
+              ['students','শিক্ষার্থী','Users',registeredUsers.length],
+              ['courses','কোর্স ও ব্যাচ','BookOpen',courses.length],
+              ['teachers','শিক্ষক ব্যবস্থাপনা','GraduationCap',null],
+            ] as const).map(([key,label,icon,count]) => {
+              const Icon = icon === 'FileText' ? FileText : icon === 'Users' ? Users : icon === 'BookOpen' ? BookOpen : GraduationCap;
+              const selected = activeTab === key;
+              return <button key={key} type="button" onClick={() => {setActiveTab(key);setSidebarOpen(false)}} className={`group flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-semibold transition-all ${selected ? 'bg-[#F5A623] text-[#111827] shadow-lg shadow-amber-950/20' : 'text-slate-300 hover:bg-white/8 hover:text-white'}`}>
+                <Icon className="h-[18px] w-[18px] shrink-0"/><span className="flex-1">{label}</span>{count !== null && <span className={`rounded-md px-2 py-0.5 text-[11px] font-bold ${selected ? 'bg-black/10' : 'bg-white/10 text-slate-300'}`}>{count}</span>}{selected && <ChevronRight className="h-4 w-4"/>}
+              </button>;
+            })}
+          </nav>
+          <div className="border-t border-white/10 p-3">
+            <Link href="/" className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold text-slate-300 transition hover:bg-white/10 hover:text-white"><Home className="h-[18px] w-[18px]"/> পাবলিক ওয়েবসাইট <ChevronRight className="ml-auto h-4 w-4"/></Link>
+            <button type="button" onClick={handleAdminLogout} className="mt-1 flex w-full items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold text-rose-300 transition hover:bg-rose-500/10"><LogOut className="h-[18px] w-[18px]"/> লগআউট</button>
+            <div className="mt-3 flex items-center gap-3 rounded-xl bg-white/5 p-3"><div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#F5A623] font-extrabold text-slate-900">IA</div><div className="min-w-0"><p className="truncate text-xs font-bold">Administrator</p><p className="truncate text-[10px] text-slate-400">{ADMIN_ID}</p></div><ShieldCheck className="ml-auto h-4 w-4 text-emerald-400"/></div>
           </div>
-        </div>
-      </header>
-
-      <main className="flex-1 py-8 px-4 sm:px-8 max-w-6xl mx-auto w-full space-y-8">
+        </aside>
+        <div className="min-w-0 flex-1 lg:ml-[270px]">
+          <header className="sticky top-0 z-30 flex min-h-[76px] items-center justify-between gap-3 border-b border-slate-200/80 bg-white/95 px-4 shadow-sm backdrop-blur-md sm:px-6 lg:px-8">
+            <div className="flex min-w-0 items-center gap-3">
+              <button type="button" onClick={() => setSidebarOpen(true)} className="rounded-xl border border-slate-200 bg-white p-2.5 text-slate-700 shadow-sm transition hover:bg-slate-50 lg:hidden" aria-label="মেনু খুলুন"><Menu className="h-5 w-5"/></button>
+              <div className="min-w-0"><p className="text-xs font-semibold text-slate-500">INFINITY ACADEMY / ADMIN</p><h1 className="truncate text-lg font-extrabold text-slate-900 sm:text-xl">{activeTab === 'applications' ? 'ভর্তি আবেদন' : activeTab === 'students' ? 'শিক্ষার্থী ব্যবস্থাপনা' : activeTab === 'courses' ? 'কোর্স ও ব্যাচ' : 'শিক্ষক ব্যবস্থাপনা'}</h1></div>
+            </div>
+            <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+              <span className="hidden items-center gap-2 rounded-full bg-emerald-50 px-3 py-2 text-xs font-bold text-emerald-700 sm:inline-flex"><span className="h-2 w-2 rounded-full bg-emerald-500"/> Admin session active</span>
+              <Link href="/" className="hidden rounded-xl border border-slate-200 px-3 py-2.5 text-sm font-bold text-slate-700 transition hover:bg-slate-50 sm:inline-flex sm:items-center sm:gap-2"><ExternalLink className="h-4 w-4"/> সাইট দেখুন</Link>
+              <button type="button" title="অ্যাডমিন অ্যাকাউন্ট" className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#111827] text-sm font-extrabold text-white ring-4 ring-slate-100">IA</button>
+            </div>
+          </header>
+      <main className="mx-auto w-full max-w-[1600px] space-y-7 px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
         {/* Summary Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          <div className="bg-white rounded-xl p-6 border border-slate-200 border-t-4 border-t-[#F5A623]">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 2xl:grid-cols-4">
+          <div className="group rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-slate-200/60">
             <p className="text-base text-slate-600 font-medium">
               মোট ভর্তি আবেদন
             </p>
-            <p className="text-3xl font-bold text-[#141A38] mt-2">
+            <p className="mt-3 text-3xl font-extrabold tracking-tight text-slate-900">
               {applications.length} টি
             </p>
           </div>
 
-          <div className="bg-white rounded-xl p-6 border border-slate-200 border-t-4 border-t-amber-500">
+          <div className="group rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-slate-200/60">
             <p className="text-base text-slate-600 font-medium">
               ফোন করা বাকি (পেন্ডিং)
             </p>
-            <p className="text-3xl font-bold text-amber-600 mt-2">
+            <p className="mt-3 text-3xl font-extrabold tracking-tight text-amber-600">
               {pendingCount} টি
             </p>
           </div>
 
-          <div className="bg-white rounded-xl p-6 border border-slate-200 border-t-4 border-t-emerald-600">
+          <div className="group rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-slate-200/60">
             <p className="text-base text-slate-600 font-medium">
               ভর্তি কনফার্মড
             </p>
-            <p className="text-3xl font-bold text-emerald-700 mt-2">
+            <p className="mt-3 text-3xl font-extrabold tracking-tight text-emerald-700">
               {confirmedCount} জন
             </p>
           </div>
 
-          <div className="bg-white rounded-xl p-6 border border-slate-200 border-t-4 border-t-[#1F2A7C]">
+          <div className="group rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-slate-200/60">
             <p className="text-base text-slate-600 font-medium">
               রেজিস্টারকৃত অ্যাকাউন্ট
             </p>
-            <p className="text-3xl font-bold text-[#1F2A7C] mt-2">
+            <p className="mt-3 text-3xl font-extrabold tracking-tight text-indigo-700">
               {registeredUsers.length} জন
             </p>
           </div>
         </div>
 
-        {/* Navigation Tabs */}
-        <div className="flex flex-wrap gap-3 bg-white p-2 rounded-xl border border-slate-200">
-          <button
-            type="button"
-            onClick={() => setActiveTab('applications')}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-base font-bold transition-colors cursor-pointer ${
-              activeTab === 'applications'
-                ? 'bg-[#1F2A7C] text-white'
-                : 'text-slate-700 hover:bg-slate-100'
-            }`}
-          >
-            <FileText className="w-5 h-5" />
-            <span>ভর্তি আবেদন তালিকা ({applications.length})</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveTab('students')}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-base font-bold transition-colors cursor-pointer ${
-              activeTab === 'students'
-                ? 'bg-[#1F2A7C] text-white'
-                : 'text-slate-700 hover:bg-slate-100'
-            }`}
-          >
-            <Users className="w-5 h-5" />
-            <span>রেজিস্টারকৃত শিক্ষার্থী ({registeredUsers.length})</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveTab('courses')}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-base font-bold transition-colors cursor-pointer ${
-              activeTab === 'courses'
-                ? 'bg-[#1F2A7C] text-white'
-                : 'text-slate-700 hover:bg-slate-100'
-            }`}
-          >
-            <BookOpen className="w-5 h-5" />
-            <span>কোর্স ও ব্যাচসমূহ ({courses.length})</span>
-          </button>
-          <button type="button" onClick={() => setActiveTab('teachers')} className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-base font-bold transition-colors cursor-pointer ${activeTab === 'teachers' ? 'bg-[#1F2A7C] text-white' : 'text-slate-700 hover:bg-slate-100'}`}>
-            <GraduationCap className="w-5 h-5" /><span>শিক্ষক ব্যবস্থাপনা</span>
-          </button>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div><p className="text-sm font-medium text-slate-500">স্বাগতম, Administrator</p><h2 className="mt-1 text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl">আপনার একাডেমি এক নজরে</h2><p className="mt-1 text-sm text-slate-500">কোর্স, শিক্ষার্থী ও ভর্তি আবেদন পরিচালনা করুন।</p></div>
+          <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-500 shadow-sm"><Clock className="h-4 w-4 text-slate-400"/> Demo / Local Storage Mode</div>
         </div>
 
         {/* TAB 1: ADMISSION APPLICATIONS */}
@@ -652,6 +622,7 @@ export default function AdminPage() {
           </div>
         )}
       </main>
-    </div>
+        </div>
+      </div>
   );
 }
