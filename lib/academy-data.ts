@@ -27,7 +27,13 @@ export interface AdmissionApplication {
   institution: string;
   address: string;
   createdAt: string;
+  status?: 'পেন্ডিং' | 'ভর্তি কনফার্মড' | 'বাতিল';
 }
+
+export const DEMO_APPLICATIONS: AdmissionApplication[] = [
+  {id:'APP-849201', studentName:'তানভীর ইসলাম', phone:'01712345678', guardianPhone:'01711998877', courseTitle:'এইচএসসি ২০২৬ পূর্ণাঙ্গ একাডেমিক ব্যাচ', className:'এইচএসসি (বিজ্ঞান)', institution:'নটর ডেম কলেজ, ঢাকা', address:'ফার্মগেট, ঢাকা', createdAt:'১০ অক্টোবর ২০২৬', status:'পেন্ডিং'},
+  {id:'APP-849185', studentName:'সাদিয়া আফরিন', phone:'01819334455', guardianPhone:'01811223344', courseTitle:'এসএসসি (দশম শ্রেণি) পূর্ণাঙ্গ প্রস্তুতি ও রিভিশন', className:'এসএসসি (দশম শ্রেণি)', institution:'ভিকারুননিসা নূন স্কুল অ্যান্ড কলেজ', address:'বেইলি রোড, ঢাকা', createdAt:'১০ অক্টোবর ২০২৬', status:'ভর্তি কনফার্মড'},
+];
 
 export const ALL_COURSES: CourseItem[] = [
   {

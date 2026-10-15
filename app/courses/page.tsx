@@ -6,7 +6,7 @@ import Image from 'next/image';
 import {useSearchParams} from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import {ALL_COURSES} from '@/lib/academy-data';
+import {useAcademyCourses} from '@/lib/use-academy-courses';
 import {StatusBadge} from '@/components/InfinityAcademyClient';
 import {Search, Clock, Video} from 'lucide-react';
 
@@ -14,12 +14,13 @@ function CoursesContent() {
   const searchParams = useSearchParams();
   const initialCategory = searchParams.get('category') || 'সব';
 
+  const courses = useAcademyCourses();
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
   const [searchQuery, setSearchQuery] = useState('');
 
   const categories = ['সব', 'ক্লাস ৬–১২', 'ইংরেজি ও স্কিল', 'ভর্তি প্রস্তুতি'];
 
-  const filteredCourses = ALL_COURSES.filter((course) => {
+  const filteredCourses = courses.filter((course) => {
     const matchesCategory =
       selectedCategory === 'সব' || course.category === selectedCategory;
     const matchesSearch =

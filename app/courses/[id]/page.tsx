@@ -1,20 +1,25 @@
-import React from 'react';
+'use client';
+
+import React, {useEffect, useState} from 'react';
 import Link from 'next/link';
+import {useParams} from 'next/navigation';
 import Image from 'next/image';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import {ALL_COURSES} from '@/lib/academy-data';
+import {ALL_COURSES, CourseItem} from '@/lib/academy-data';
 import {StatusBadge} from '@/components/InfinityAcademyClient';
 import {CheckCircle2, Clock, Video, Calendar, User} from 'lucide-react';
 
-export default async function CourseDetailsPage({
-  params,
-}: {
-  params: Promise<{id: string}>;
-}) {
-  const {id} = await params;
-  const course =
-    ALL_COURSES.find((c) => c.id === id) || ALL_COURSES[0];
+export default function CourseDetailsPage() {
+  const params = useParams<{id: string}>();
+  const id = params.id;
+  const [courses, setCourses] = useState<CourseItem[]>(ALL_COURSES);
+  useEffect(() => {
+    const load = () => { try { const raw = localStorage.getItem('infinity_academy_courses'); if (raw) { const parsed: CourseItem[] = JSON.parse(raw); if (Array.isArray(parsed) && parsed.length) setCourses(parsed); } } catch {} };
+    load(); window.addEventListener('storage', load); window.addEventListener('infinity-courses-updated', load);
+    return () => { window.removeEventListener('storage', load); window.removeEventListener('infinity-courses-updated', load); };
+  }, []);
+  const course = courses.find((c) => c.id === id) || ALL_COURSES.find((c) => c.id === id) || ALL_COURSES[0];
 
   return (
     <div className="min-h-screen flex flex-col bg-[#F8F9FC] text-[#141A38]">

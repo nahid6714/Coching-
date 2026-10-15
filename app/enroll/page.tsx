@@ -5,22 +5,28 @@ import Link from 'next/link';
 import {useSearchParams} from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import {ALL_COURSES, AdmissionApplication} from '@/lib/academy-data';
+import {ALL_COURSES, DEMO_APPLICATIONS, AdmissionApplication} from '@/lib/academy-data';
+import {useAcademyCourses} from '@/lib/use-academy-courses';
 import {CheckCircle2, PhoneCall, ArrowRight} from 'lucide-react';
 
 function EnrollFormContent() {
+  const courses = useAcademyCourses();
   const searchParams = useSearchParams();
   const initialCourseTitle =
     searchParams.get('course') || ALL_COURSES[0].title;
 
   const [studentName, setStudentName] = useState('');
   const [phone, setPhone] = useState('');
+  const [guardianPhone, setGuardianPhone] = useState('');
+  const [institution, setInstitution] = useState('');
+  const [address, setAddress] = useState('');
+  const [className, setClassName] = useState('');
   const [courseTitle, setCourseTitle] = useState(initialCourseTitle);
   const [submittedApp, setSubmittedApp] =
     useState<AdmissionApplication | null>(null);
 
   const selectedCourseObj =
-    ALL_COURSES.find((c) => c.title === courseTitle) || ALL_COURSES[0];
+    courses.find((c) => c.title === courseTitle) || courses[0] || ALL_COURSES[0];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,11 +34,11 @@ function EnrollFormContent() {
       id: `APP-${Date.now().toString().slice(-6)}`,
       studentName: studentName.trim(),
       phone: phone.trim(),
-      guardianPhone: '',
+      guardianPhone: guardianPhone.trim(),
       courseTitle: selectedCourseObj.title,
-      className: selectedCourseObj.className,
-      institution: '',
-      address: '',
+      className: className.trim() || selectedCourseObj.className,
+      institution: institution.trim(),
+      address: address.trim(),
       createdAt: new Date().toLocaleString('bn-BD'),
     };
 
@@ -42,7 +48,7 @@ function EnrollFormContent() {
       );
       const existing: AdmissionApplication[] = existingRaw
         ? JSON.parse(existingRaw)
-        : [];
+        : DEMO_APPLICATIONS;
       localStorage.setItem(
         'infinity_academy_applications',
         JSON.stringify([newApplication, ...existing])
@@ -102,6 +108,7 @@ function EnrollFormContent() {
                 setSubmittedApp(null);
                 setStudentName('');
                 setPhone('');
+                setGuardianPhone(''); setInstitution(''); setAddress(''); setClassName('');
               }}
               className="border border-slate-200 hover:bg-slate-50 text-[#141A38] font-bold text-base px-6 py-3 rounded-lg transition-colors cursor-pointer"
             >
@@ -188,6 +195,16 @@ function EnrollFormContent() {
             />
           </div>
 
+          <div>
+            <label className="block text-base sm:text-lg font-bold text-[#141A38] mb-2">অভিভাবকের মোবাইল নম্বর</label>
+            <input type="tel" value={guardianPhone} onChange={(e) => setGuardianPhone(e.target.value)} placeholder="01XXXXXXXXX (ঐচ্ছিক)" className="w-full rounded-xl border border-slate-300 px-4 py-3.5 text-base sm:text-lg focus:outline-none focus:border-[#1F2A7C]" />
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <label className="block text-base font-bold text-[#141A38]">বর্তমান শ্রেণি<input value={className} onChange={(e) => setClassName(e.target.value)} placeholder="যেমন: এইচএসসি ১ম বর্ষ" className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 focus:outline-none focus:border-[#1F2A7C]" /></label>
+            <label className="block text-base font-bold text-[#141A38]">শিক্ষাপ্রতিষ্ঠান<input value={institution} onChange={(e) => setInstitution(e.target.value)} placeholder="প্রতিষ্ঠানের নাম (ঐচ্ছিক)" className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 focus:outline-none focus:border-[#1F2A7C]" /></label>
+          </div>
+          <div><label className="block text-base font-bold text-[#141A38] mb-2">ঠিকানা / অতিরিক্ত তথ্য</label><textarea rows={2} value={address} onChange={(e) => setAddress(e.target.value)} placeholder="এলাকা, জেলা বা অন্য তথ্য (ঐচ্ছিক)" className="w-full rounded-xl border border-slate-300 px-4 py-3 focus:outline-none focus:border-[#1F2A7C]" /></div>
+
           {/* 3. Class / Course */}
           <div>
             <label className="block text-base sm:text-lg font-bold text-[#141A38] mb-2">
@@ -198,7 +215,7 @@ function EnrollFormContent() {
               onChange={(e) => setCourseTitle(e.target.value)}
               className="w-full rounded-xl border border-slate-300 px-4 py-3.5 text-base sm:text-lg text-[#141A38] bg-white focus:outline-none focus:border-[#1F2A7C]"
             >
-              {ALL_COURSES.map((c) => (
+              {courses.map((c) => (
                 <option key={c.id} value={c.title}>
                   {c.title} ({c.fee})
                 </option>

@@ -6,6 +6,7 @@ import Image from 'next/image';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import {ALL_COURSES, BatchStatus, TESTIMONIALS} from '@/lib/academy-data';
+import {useAcademyCourses} from '@/lib/use-academy-courses';
 import {
   PlaySquare,
   CheckSquare,
@@ -39,17 +40,18 @@ export function StatusBadge({status}: {status: BatchStatus}) {
 }
 
 export default function InfinityAcademyClient() {
+  const dynamicCourses = useAcademyCourses();
   const [doubtModalOpen, setDoubtModalOpen] = useState(false);
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
   const [loading, setLoading] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string>('ইংরেজি ও স্কিল');
 
-  const academicCourses = ALL_COURSES.filter((c) => c.category === 'ক্লাস ৬–১২');
+  const academicCourses = dynamicCourses.filter((c) => c.category === 'ক্লাস ৬–১২');
   const displayedCourses =
     activeCategory === 'সব'
-      ? ALL_COURSES
-      : ALL_COURSES.filter((c) => c.category === activeCategory);
+      ? dynamicCourses
+      : dynamicCourses.filter((c) => c.category === activeCategory);
 
   const handleDoubtSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
