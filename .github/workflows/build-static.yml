@@ -1,0 +1,29 @@
+name: Build Infinity Academy frontend
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend-source
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install
+      - name: Build static site
+        env:
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+        run: npm run build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: infinity-academy-out
+          path: frontend-source/out/
+          if-no-files-found: error
+          include-hidden-files: true
