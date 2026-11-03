@@ -27,10 +27,6 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Check API URL secret
-        run: |
-          if [ -z "${{ secrets.NEXT_PUBLIC_API_URL }}" ]; then echo "::error::Add the NEXT_PUBLIC_API_URL repository secret first."; exit 1; fi
-
       - name: Build static site
         env:
           NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
@@ -42,4 +38,5 @@ jobs:
           name: infinity-academy-out
           path: out/
           if-no-files-found: error
+          include-hidden-files: true
           retention-days: 14

@@ -66,5 +66,12 @@ Frontend-এ শুধু `NEXT_PUBLIC_API_URL` রাখা যাবে। Dat
 
 ## আপডেট নোট
 
-- `NEXT_PUBLIC_API_URL` না দিলে production build এখন ইচ্ছাকৃতভাবে ব্যর্থ হবে (ভুল URL নীরবে বসবে না)। `npm run lint` স্ক্রিপ্ট ও ভাঙা ESLint কনফিগ সরানো হয়েছে; `npm run typecheck` চালান।
+- `NEXT_PUBLIC_API_URL` না দিলেও বিল্ড হবে; তখন সাইট ব্রাউজারে নিজে `api.<আপনার-ডোমেইন>/api` ধরে নেয়।
 - `.htaccess`-এ `ErrorDocument 404 /404.html` যোগ হয়েছে।
+
+## আপনার ডোমেইনের জন্য প্রস্তুত মান
+
+- ওয়েবসাইট: `https://dmnahid.aisky.link`
+- API: `https://api.dmnahid.aisky.link/api`
+- GitHub secret `NEXT_PUBLIC_API_URL`-এর মান: `https://api.dmnahid.aisky.link/api`
+- Actions-এর `infinity-academy-out` Artifact unzip করে ভেতরের সব ফাইল (`.htaccess` সহ) `public_html/`-এ আপলোড করুন।

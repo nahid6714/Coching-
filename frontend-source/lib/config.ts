@@ -1,7 +1,13 @@
 const configured = process.env.NEXT_PUBLIC_API_URL?.trim();
 
-if (!configured && process.env.NODE_ENV === 'production') {
-  throw new Error('NEXT_PUBLIC_API_URL is not set. Set it (e.g. https://api.yourdomain.com/api) before running the production build.');
+// If NEXT_PUBLIC_API_URL is not set at build time, the API address is worked out in the
+// browser: https://example.com  ->  https://api.example.com/api
+export function getApiBase(): string {
+  if (configured) return configured.replace(/\/$/, '');
+  if (typeof window !== 'undefined') {
+    const host = window.location.hostname;
+    if (host === 'localhost' || host === '127.0.0.1') return 'http://localhost:8000/api';
+    return `${window.location.protocol}//api.${host.replace(/^www\./, '')}/api`;
+  }
+  return '';
 }
-
-export const API_BASE_URL = (configured || 'http://localhost:8000/api').replace(/\/$/, '');

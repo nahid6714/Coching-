@@ -1,4 +1,4 @@
-import { API_BASE_URL } from './config';
+import { getApiBase } from './config';
 
 export class ApiError extends Error {
   constructor(message: string, public status: number, public errors?: Record<string, string[]>) {
@@ -15,7 +15,7 @@ export async function api<T>(path: string, options: RequestInit = {}, token?: st
   }
   let response: Response;
   try {
-    response = await fetch(`${API_BASE_URL}${path.startsWith('/') ? path : `/${path}`}`, {
+    response = await fetch(`${getApiBase()}${path.startsWith('/') ? path : `/${path}`}`, {
       ...options, headers, cache: 'no-store',
     });
   } catch {
